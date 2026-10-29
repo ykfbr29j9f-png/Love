@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Do you love me?</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg1:#ffb3b3; --bg2:#ffd1e0; --card:#fffafa; --ink:#4a1020; --muted:#7a5a62;
+  --yes:#1fb86b; --yes2:#168f53; --no:#e0304f; --pink:#ff3b6b;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg1:#5a2234; --bg2:#7a3350; --card:#2a1620; --ink:#ffe3ea; --muted:#d9b3be;
+  }
+}
+:root[data-theme="dark"]{
+  --bg1:#5a2234; --bg2:#7a3350; --card:#2a1620; --ink:#ffe3ea; --muted:#d9b3be;
+}
+html,body{height:100%;margin:0}
+body{
+  background:linear-gradient(160deg,var(--bg1),var(--bg2));
+  font-family:'Poppins',system-ui,sans-serif;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;color:var(--ink);
+}
+.card{
+  background:var(--card);border-radius:22px;padding:28px 22px 30px;
+  box-shadow:0 14px 40px rgba(120,30,60,.18);
+  width:min(88vw,360px);text-align:center;
+}
+h1{font-family:'Caveat',cursive;font-weight:600;font-size:2.4rem;margin:0 0 6px}
+.mascot{width:110px;height:110px;margin:4px auto 18px;display:block}
+.btns{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:nowrap}
+button{
+  border:0;color:#fff;font-family:inherit;font-weight:600;cursor:pointer;
+  border-radius:12px;transition:all .25s ease;white-space:nowrap;
+}
+#yes{background:linear-gradient(180deg,var(--yes),var(--yes2));font-size:16px;padding:10px 22px}
+#no{background:var(--no);font-size:14px;padding:9px 16px}
+#yes.full{position:fixed;inset:0;z-index:10;border-radius:0;font-size:56px}
+.win{display:none;text-align:center;padding:0 20px}
+.win h1{color:var(--pink);font-size:3rem}
+.win p{color:var(--muted);font-size:.95rem}
+body.won .card{display:none}
+body.won .win{display:block}
+.heart{position:fixed;top:-30px;font-size:22px;animation:fall linear forwards;pointer-events:none}
+@keyframes fall{to{transform:translateY(110vh) rotate(360deg);opacity:.2}}
+</style>
+</head>
+<body>
+
+<div class="card" id="card">
+  <h1>Do you love me?</h1>
+  <svg class="mascot" viewBox="0 0 120 120" aria-hidden="true">
+    <ellipse cx="60" cy="100" rx="22" ry="6" fill="#000" opacity=".06"/>
+    <path d="M38 62c-6-14 6-30 22-30s28 16 22 30c4 8 2 28-22 28S34 70 38 62z" fill="#fff" stroke="#3a2a2a" stroke-width="2.5"/>
+    <circle cx="60" cy="30" r="5" fill="#fff" stroke="#3a2a2a" stroke-width="2.5"/>
+    <ellipse cx="50" cy="58" rx="7" ry="8" fill="#5a3a30"/>
+    <ellipse cx="70" cy="58" rx="7" ry="8" fill="#5a3a30"/>
+    <circle cx="48" cy="55" r="2.5" fill="#fff"/><circle cx="68" cy="55" r="2.5" fill="#fff"/>
+    <path d="M56 70q4 3 8 0" stroke="#3a2a2a" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M60 86c-9-7-12-12-8-16 3-3 7-1 8 2 1-3 5-5 8-2 4 4 1 9-8 16z" fill="#ff8fa8"/>
+  </svg>
+  <div class="btns">
+    <button id="yes">Yes</button>
+    <button id="no">No</button>
+  </div>
+</div>
+
+<div class="win" id="win">
+  <h1>I knew it! ❤️</h1>
+  <svg class="mascot" viewBox="0 0 120 120" aria-hidden="true">
+    <path d="M38 62c-6-14 6-30 22-30s28 16 22 30c4 8 2 28-22 28S34 70 38 62z" fill="#fff" stroke="#3a2a2a" stroke-width="2.5"/>
+    <path d="M44 58q6-5 12 0M64 58q6-5 12 0" stroke="#3a2a2a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <path d="M54 70q6 6 12 0" stroke="#3a2a2a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <circle cx="44" cy="68" r="4" fill="#ff8fa8" opacity=".6"/><circle cx="76" cy="68" r="4" fill="#ff8fa8" opacity=".6"/>
+  </svg>
+  <p>You made the right choice!</p>
+</div>
+
+<script>
+// ✏️ Change the texts here
+var NO_TEXTS = [
+  "No",
+  "Really sure?",
+  "Think again!",
+  "Last chance!",
+  "You might regret this!",
+  "Give it another thought!",
+  "Are you absolutely certain?",
+  "This could be a mistake!",
+  "Have a heart!"
+];
+
+var yes = document.getElementById('yes');
+var no  = document.getElementById('no');
+var n = 0;
+
+no.addEventListener('click', function () {
+  n++;
+  no.textContent = NO_TEXTS[Math.min(n, NO_TEXTS.length - 1)];
+  // Yes button grows every click
+  var size = 16 + n * 6;
+  yes.style.fontSize = size + 'px';
+  yes.style.padding = (10 + n * 6) + 'px ' + (22 + n * 14) + 'px';
+  yes.style.borderRadius = (12 + n * 2) + 'px';
+  // After enough clicks, Yes covers the whole screen
+  if (n >= 8) {
+    yes.classList.add('full');
+  }
+});
+
+yes.addEventListener('click', function () {
+  document.body.classList.add('won');
+  yes.classList.remove('full');
+  for (var i = 0; i < 40; i++) {
+    (function (i) {
+      setTimeout(function () {
+        var h = document.createElement('div');
+        h.className = 'heart';
+        h.textContent = ['❤️','💖','💕'][i % 3];
+        h.style.left = Math.random() * 100 + 'vw';
+        h.style.fontSize = (14 + Math.random() * 20) + 'px';
+        h.style.animationDuration = (3 + Math.random() * 3) + 's';
+        document.body.appendChild(h);
+        setTimeout(function () { h.remove(); }, 7000);
+      }, i * 150);
+    })(i);
+  }
+});
+</script>
+</body>
+</html>
